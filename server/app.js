@@ -1,9 +1,19 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const app = express();
-const cors = require("cors");+
+const connectToMongo = require("./db");
 
+connectToMongo();
+const express = require('express')
+const _ = require("dotenv");
+require('dotenv').config(); 
 
-app.listen(5000, function () {
-  console.log(`Server started at `+ 5000);
-});
+var cors = require("cors");
+const app = express()
+const port = 5000
+
+app.use(express.json());
+app.use(cors());
+
+app.use("/api/auth", require("./routes/auth"));
+
+app.listen(port, () => {
+  console.log(`CanteenConnect is listening on port ${port}`)
+})
