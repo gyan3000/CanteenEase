@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 const fetchuser = require("./../middleware/fetchuser");
 const JWT_SECRET = "SaurabhGenius";
 
-router.post("/createUser", [body('email', 'Enter a valid email').isEmail(),
+router.post("/signup", [body('email', 'Enter a valid email').isEmail(),
 body("name", "enter a valid name").isLength({ min: 3 }),
 body('password', "Password must be atleast 5 length").isLength({ min: 5 })],
     async (req, res) => {
@@ -20,7 +20,7 @@ body('password', "Password must be atleast 5 length").isLength({ min: 5 })],
         try {
             let user = await User.findOne({ email: req.body.email });
             if (user) {
-                res.json({  "success": success, error: "Email already registered" });
+                return res.status(200).json({  "success": success, error: "Email already registered" });
             }
             const salt = await bcrypt.genSalt(10);
             const secPass = await bcrypt.hash(req.body.password, salt);
