@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const menuSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     description: {
         type: String
@@ -23,8 +24,9 @@ const menuSchema = new mongoose.Schema({
     preparationTime: {
         type: Number 
     },
-    dietaryLabels: {
-        vegetarian: Boolean
+    vegetarian: {
+        type : Boolean,
+        default: true
     },
     price: {
         type: Number,
