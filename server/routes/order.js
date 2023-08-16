@@ -1,6 +1,8 @@
 const express = require("express");
 const User = require("./../models/Order");
 const fetchuser = require("./../middleware/fetchuser");
+
+
 app.post('/api/place-order',fetchuser, async (req, res) => {
     try {
         const { user, items, totalAmount, paymentMethod } = req.body;
