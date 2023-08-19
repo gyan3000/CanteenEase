@@ -28,7 +28,7 @@ router.post('/add-menu',fetchadmin, async (req, res) => {
     }
 });
 
-router.get('/get-menu',fetchuser, async (req, res) => {
+router.get('/get-menu', async (req, res) => {
     try {
         const menuItems = await Menu.find();
         return res.status(200).json(menuItems);

@@ -33,6 +33,10 @@ const orderSchema = new mongoose.Schema({
     timestamp: {
         type: Date,
         default: Date.now
+    },
+    orderNumber:{
+        type: Number,
+        required: true
     }
 });
 

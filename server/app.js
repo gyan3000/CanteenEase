@@ -14,6 +14,8 @@ app.use(cors());
 
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/menu", require("./routes/menu"));
+app.use("/api/order", require("./routes/order"));
+
 
 app.listen(port, () => {
   console.log(`CanteenConnect is listening on port ${port}`)
