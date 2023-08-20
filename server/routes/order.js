@@ -133,6 +133,47 @@ router.get('/your-orders', fetchuser, async (req, res) => {
     }
 });
 
+router.get('/order-numbers', fetchuser, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const pendingOrders = await Order.find({ user: req.user.id, status: 'Pending' }).sort({ timestamp: 1 });
+        const deliveredOrders = await Order.find({ user: req.user.id, status: 'Delivered' }).sort({ timestamp: -1 });
+
+        const pendingOrderNumbers = pendingOrders.map(order => order.orderNumber);
+        const latestDeliveredOrderNumber = deliveredOrders.length > 0 ? deliveredOrders[0].orderNumber : null;
+
+        res.json({
+            pendingOrderNumbers,
+            latestDeliveredOrderNumber
+        });
+    } catch (error) {
+        console.error('Error getting order numbers:', error);
+        res.status(500).json({ error: 'An error occurred while getting order numbers' });
+    }
+});
+
+router.patch('/mark-delivered/:orderId',fetchadmin, async (req, res) => {
+    try {
+        const orderId = req.params.orderId;
+        const order = await Order.findById(orderId);
+
+        if (!order) {
+            return res.status(404).json({ error: 'Order not found' });
+        }
+        order.status = 'Delivered';
+        await order.save();
+
+        return res.json({ message: 'Order marked as delivered' });
+    } catch (error) {
+        console.error('Error marking order as delivered:', error);
+        res.status(500).json({ error: 'An error occurred while marking order as delivered' });
+    }
+});
 
 
 module.exports = router;
