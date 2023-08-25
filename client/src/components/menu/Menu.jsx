@@ -1,28 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import MenuCard from './MenuCard';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchMenuData } from '../redux/requests/getMenuData';
 
 const Menu = () => {
-  const [menuItems, setMenuItems] = useState([]);
-
-  useEffect(() => {
-    async function fetchMenuItems() {
-      try {
-        const response = await axios.get('http://localhost:5000/api/menu/get-menu');
-        setMenuItems(response.data);
-      } catch (error) {
-        console.error('Error fetching menu items:', error);
-      }
-    }
-
-    fetchMenuItems();
-  }, []);
-
+  const menuItems = useSelector((state)=>state.getMenu)
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    fetchMenuData(dispatch);
+  },[])
   return (
+    <>
     <div className="menu-container d-flex flex-wrap align-content-start justify-content-around">
-      {menuItems.map(item => (
+      {menuItems &&  menuItems?.menu?.map((item, index) => (
         <MenuCard
-          key={item._id}
+          key={index}
+          id= {item._id}
           name={item.name}
           description={item.description}
           vegetarian={item.vegetarian}
@@ -31,6 +25,7 @@ const Menu = () => {
         />
       ))}
     </div>
+    </>
   );
 }
 
