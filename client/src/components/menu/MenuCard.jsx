@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
-const MenuCard = ({ key, id, name, description, vegetarian, price, img }) => {
+const MenuCard = ({ id, name, description, vegetarian, price, img }) => {
     const [orderQuantity, setOrderQuantity] = useState(0);
     const cartkey = "cart";
     const saveCartToLocalStorage = (cartItems) => {
@@ -76,9 +75,9 @@ const MenuCard = ({ key, id, name, description, vegetarian, price, img }) => {
                                 </button>
                             </>
                         ) : (
-                            <a href="#" className="btn btn-primary" onClick={() => handleOrder(1)}>
+                            <button className="btn btn-primary" onClick={() => handleOrder(1)}>
                                 Order: {price}
-                            </a>
+                            </button>
                         )}
                     </div>
                 </div>

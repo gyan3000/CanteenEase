@@ -1,5 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import Button from "@mui/material/Button";
+
 const Navbar = () => {
     return (
         <div>
@@ -20,9 +22,11 @@ const Navbar = () => {
                             <li className="nav-item">
                                 <Link className="nav-link active"  to= "/cart">Cart</Link>
                             </li>
+                            <li className="nav-item">
+                                <Link className="nav-link active"  to= "/otp">otp</Link>
+                            </li>
                         </ul>
-                        <button className="btn btn-primary" type="submit">Login</button>
-                        <button className="btn btn-primary mx-2" type="submit">Signup</button>
+                        <a className="btn btn-primary mx-2" href="/login" role="button">Login</a>
                     </div>
                 </div>
             </nav>
