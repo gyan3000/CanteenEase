@@ -9,21 +9,19 @@ const Counter = require('./../models/Counter');
 
 const router = express.Router();
 
-router.post('/place-order',fetchuser, async (req, res) => {
+router.post('/place-order', fetchuser, async (req, res) => {
     try {
-        const {items} = req.body;
+        const items = req.body.items;
         const user = await User.findById(req.user.id);
-
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
-
-          const itemIds = items.map(item => item.menu);
-          const menuItems = await Menu.find({ _id: { $in: itemIds } });
-          const totalAmount = items.reduce((acc, item) => {
-              const menuItem = menuItems.find(menuItem => menuItem._id.toString() === item.menu.toString());
-              return acc + menuItem.price * item.quantity;
-          }, 0);
+        const itemIds = items?.map(item => item.id);
+        const menuItems = await Menu.find({ _id: { $in: itemIds } });
+        const totalAmount = items?.reduce((acc, item) => {
+            const menuItem = menuItems?.find(menuItem => menuItem._id.toString() === item.id.toString());
+            return acc + menuItem?.price * item.quantity;
+        }, 0);
 
         const orderCounter = await Counter.findByIdAndUpdate(
             { _id: 'orderNumber' },
@@ -44,8 +42,9 @@ router.post('/place-order',fetchuser, async (req, res) => {
             orderId: savedOrder._id,
             orderDate: savedOrder.timestamp,
             items: items.map(item => ({
-                itemId: item.menu,
-                quantity: item.quantity
+                itemId: item.id,
+                quantity: item.quantity,
+                price: item.price,
             })),
             totalAmount,
             orderNumber: orderNumber
@@ -58,7 +57,7 @@ router.post('/place-order',fetchuser, async (req, res) => {
     }
 });
 
-router.get('/pending-orders',fetchadmin, async (req, res) => {
+router.get('/pending-orders', fetchadmin, async (req, res) => {
     try {
         const pendingOrders = await Order.find({ status: 'Pending' }).sort({ timestamp: -1 });
 
@@ -69,7 +68,7 @@ router.get('/pending-orders',fetchadmin, async (req, res) => {
             if (user) {
                 const itemsWithNames = [];
                 for (const item of order.items) {
-                    const menuItem = await Menu.findById(item.menu);
+                    const menuItem = await Menu.findById(item.id);
                     if (menuItem) {
                         itemsWithNames.push({
                             name: menuItem.name,
@@ -98,8 +97,7 @@ router.get('/pending-orders',fetchadmin, async (req, res) => {
 
 router.get('/your-orders', fetchuser, async (req, res) => {
     try {
-        const orders = await Order.find({ user: req.user.id }).sort({ orderNumber: 1});
-
+        const orders = await Order.find({ user: req.user.id }).sort({ orderNumber: 1 });
         const allOrders = [];
         var user
         for (const order of orders) {
@@ -107,15 +105,15 @@ router.get('/your-orders', fetchuser, async (req, res) => {
             if (user) {
                 const itemsWithNames = [];
                 for (const item of order.items) {
-                    const menuItem = await Menu.findById(item.menu);
+                    const menuItem = await Menu.findById(item.id);
                     if (menuItem) {
                         itemsWithNames.push({
                             name: menuItem.name,
-                            quantity: item.quantity
+                            quantity: item.quantity,
+                            price: menuItem.price
                         });
                     }
                 }
-
                 allOrders.push({
                     orderNumber: order.orderNumber,
                     items: itemsWithNames,
@@ -125,8 +123,7 @@ router.get('/your-orders', fetchuser, async (req, res) => {
                 });
             }
         }
-
-        res.json({userName: user.name, allOrders});
+        res.json({ userName: user.name, allOrders });
     } catch (error) {
         console.error('Error getting orders:', error);
         res.status(500).json({ error: 'An error occurred while getting orders' });
@@ -157,7 +154,7 @@ router.get('/order-numbers', fetchuser, async (req, res) => {
     }
 });
 
-router.patch('/mark-delivered/:orderId',fetchadmin, async (req, res) => {
+router.patch('/mark-delivered/:orderId', fetchadmin, async (req, res) => {
     try {
         const orderId = req.params.orderId;
         const order = await Order.findById(orderId);

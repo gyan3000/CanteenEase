@@ -7,7 +7,7 @@ const orderSchema = new mongoose.Schema({
         required: true
     },
     items: [{
-        menu: {
+        id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Menu',
             required: true
