@@ -10,7 +10,13 @@ export async function fetchUserDataSignup(dispatch, body) {
             }
         });
         const data = response.data;
-        dispatch(getUser({...body,...data}));
+        if(data.success){
+            dispatch(getUser({...body,...data}));
+            window.location = "/menu";
+            toast.success("SignUp Successful");
+        }else{
+            toast.error("Error in Creating account");
+        }
     } catch (error) {
         console.log("Error in signup");
     }

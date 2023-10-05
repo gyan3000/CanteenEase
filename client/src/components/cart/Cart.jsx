@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect} from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
+import axios from "axios";
 
 const Cart = () => {
+  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
   const cartKey = "cart";
+  const user = useSelector((state)=>state.getUser);
 
   useEffect(() => {
     const storedCartItems = JSON.parse(localStorage.getItem(cartKey)) || [];
@@ -37,6 +42,31 @@ const Cart = () => {
       console.error('Error updating cart item:', error);
     }
   };
+  const placeOrder = async () => {
+    const storedCartItems = JSON.parse(localStorage.getItem(cartKey)) || [];
+    const body = {
+      "items": storedCartItems
+    }
+    if (!storedCartItems.length) {
+      toast.error("Add some items in the cart");
+    } else {
+      try {
+        const response = await axios.post('http://localhost:5000/api/order/place-order', body, {
+          headers: { "Content-Type": "application/json; charset=UTF-8", "auth-token": user.user.authtoken },
+        });
+        if(response.status===201){
+            toast.success("Order Successful with order No.: "+response.data.orderNumber);
+            navigate("/menu");
+            localStorage.setItem(cartKey, JSON.stringify([]));
+            setCartItems([]);
+        }else{
+          toast.error("Error while ordering. Try Again!");
+        }
+      } catch (error) {
+        console.log("Error In Placing Your Order", error);
+      }
+    }
+  }
 
   return (
     <div className="container mx-2 my-5">
@@ -81,9 +111,9 @@ const Cart = () => {
         <h4>Subtotal: ₹{calculateTotal().toFixed(2)}</h4>
       </div>
       <div className="mt-4">
-        <Link className="btn btn-primary mx-2" to="/menu">
+        <button type="button" className='btn btn-primary mx-2' onClick={placeOrder} >
           Place Order
-        </Link>
+        </button>
         <Link className="btn btn-primary mx-2" to="/menu">
           Add More Items
         </Link>

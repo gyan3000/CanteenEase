@@ -7,8 +7,7 @@ export async function fetchMenuData(dispatch) {
             headers: { "Content-Type": "application/json; charset=UTF-8" }
         });
         const data = response.data;
-        console.log(data);
-            dispatch(getMenu(data));
+        dispatch(getMenu(data));
     } catch (error) {
         console.log("Error in fetching menu items");
     }
