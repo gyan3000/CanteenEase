@@ -1,0 +1,53 @@
+/* Add this CSS to your component's stylesheet or import it */
+.Orders {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .Orders h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .OrderCard {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    background-color: #fff;
+  }
+  
+  .OrderDetails {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  
+  .OrderItems {
+    margin-top: 10px;
+  }
+  
+  .OrderItems ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .OrderItems li {
+    margin-bottom: 5px;
+  }
+  
+  .MarkAsDeliveredButton {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .MarkAsDeliveredButton:hover {
+    background-color: #45a049;
+  }
+  

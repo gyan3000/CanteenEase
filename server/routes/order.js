@@ -78,6 +78,7 @@ router.get('/pending-orders', fetchadmin, async (req, res) => {
                 }
 
                 allOrders.push({
+                    orderId: order._id,
                     orderNumber: order.orderNumber,
                     userName: user.name,
                     items: itemsWithNames,
@@ -154,16 +155,17 @@ router.get('/order-numbers', fetchuser, async (req, res) => {
     }
 });
 
-router.patch('/mark-delivered/:orderId', fetchadmin, async (req, res) => {
+router.get('/mark-delivered/:orderId', fetchadmin, async (req, res) => {
     try {
         const orderId = req.params.orderId;
         const order = await Order.findById(orderId);
-
         if (!order) {
             return res.status(404).json({ error: 'Order not found' });
         }
-        order.status = 'Delivered';
-        await order.save();
+        await Order.updateOne(
+            { _id: orderId }, 
+            { $set: { status: 'Delivered' } }
+        );
 
         return res.json({ message: 'Order marked as delivered' });
     } catch (error) {
