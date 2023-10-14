@@ -1,0 +1,30 @@
+.card {
+    justify-content: space-evenly;
+    flex-shrink: 0;
+}
+
+.card-img {
+    padding-right: 0.15rem;
+    width: 19rem;
+    filter: drop-shadow(rgb(205, 209, 205) 3px 3px 3px);
+}
+
+
+.title {
+    display: flex;
+    flex-direction: column;
+}
+
+.price {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 1000;
+    font-size: xx-large;
+}
+
+.title-price {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+@media (max-width: 900px) {}
