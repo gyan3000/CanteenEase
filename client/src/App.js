@@ -9,12 +9,16 @@ import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Orders from './components/orders/Orders';
 import Profile from './components/profile/Profile';
+import PaytmButton from './components/paytm-button/PaytmButton';
+import Razor from './components/razorpay/Razor';
+
 
 function App() {
   return (
     <Router>
       <div className="App">
         <Navbar />
+        <Razor />
         <Routes>
           <Route path="menu" element={<Menu />} />
           <Route path="cart" element={<Cart />} />
