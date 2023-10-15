@@ -1,39 +1,63 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from "react";
+import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
+import logo from './../../images/logo.png'
+import "./Navbar.css"
 
 const Navbar = () => {
-    const user = useSelector((state)=> state.getUser).user;
+  const user = useSelector((state) => state.getUser).user;
 
-    return (
-        <div>
-            <nav className="navbar navbar-expand-lg bg-body-tertiary">
-                <div className="container-fluid">
-                    <Link className="navbar-brand" to="/">CanteenConnect</Link>
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li className="nav-item">
-                                <Link className="nav-link active" to="/menu">Order</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link active"  to= "/cart">Cart</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link active"  to= "/orders">My Orders</Link>
-                            </li>
-                        </ul>
-                        {!user.authtoken? <a className="btn btn-primary mx-2" href="/login" role="button">Login</a>: 
-                        <a className="btn btn-primary mx-2" href="/profile" role="button">Profile</a> }
-                    </div>
-                </div>
-            </nav>
-
+  return (
+    <div>
+      <nav className="navbar navbar-expand-lg " style={{" background": "transparent"}}>
+        <div className="container-fluid">
+          <Link className="navbar-brand" to="/">
+            <img src={logo} alt="" />
+          </Link>
+          <div className="items">
+            <ul>
+              <li className="nav-item">
+                <Link className="nav-link active text-white" to="/">
+                  Home
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link active text-white" to="/menu">
+                  Menu
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link active text-white" to="/cart">
+                  Cart
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link active text-white" to="/orders">
+                  Track Order
+                </Link>
+              </li>
+              {/* <li className="nav-item">
+              {!user.authtoken ? (
+                <a className="btn btn-primary mx-2" href="/login" role="button">
+                  Login
+                </a>
+              ) : (
+                <a className="btn btn-primary mx-2" href="/profile" role="button">
+                  Profile
+                </a>
+              )}   
+              </li>               */}
+            </ul>                     
+          </div>
         </div>
-    )
-}
+      </nav>
+      {/* <div class="search-box">
+        <input type="text" placeholder="Search Canteen"/>
+        <button></button>
+      </div> */}
+    </div>
+  );
+};
 
-export default Navbar
+export default Navbar;

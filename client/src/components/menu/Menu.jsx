@@ -3,6 +3,7 @@ import axios from 'axios';
 import MenuCard from './MenuCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchMenuData } from '../redux/requests/getMenuData';
+import './Menu.css';
 
 const Menu = () => {
   const menuItems = useSelector((state)=>state.getMenu)
@@ -12,19 +13,21 @@ const Menu = () => {
   },[])
   return (
     <>
-    <div className="menu-container d-flex flex-wrap align-content-start justify-content-around">
-      {menuItems &&  menuItems?.menu?.map((item, index) => (
-        <MenuCard
-          key={index}
-          id= {item._id}
-          name={item.name}
-          description={item.description}
-          vegetarian={item.vegetarian}
-          price={item.price}
-          img={item.img}
-        />
-      ))}
-    </div>
+      <div className='menu-parent'>
+        <div className="menu-container">
+          {menuItems &&  menuItems?.menu?.map((item, index) => (
+            <MenuCard
+              key={index}
+              id= {item._id}
+              name={item.name}
+              description={item.description}
+              vegetarian={item.vegetarian}
+              price={item.price}
+              img={item.img}
+            />
+          ))}
+        </div>
+      </div>
     </>
   );
 }

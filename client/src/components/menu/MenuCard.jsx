@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import "./MenuCard.css";
+import Card from 'react-bootstrap/Card';
+
 const MenuCard = ({ id, name, description, vegetarian, price, img }) => {
     const [orderQuantity, setOrderQuantity] = useState(0);
     const cartkey = "cart";
@@ -52,31 +55,46 @@ const MenuCard = ({ id, name, description, vegetarian, price, img }) => {
 
     return (
         <>
-            <div className="card mx-2 my-3" style={{ width: "20rem" }}>
-                <img src={img} className="card-img-top" alt={name} />
+            <div className="card mx-2 my-3" style={{ width: "20rem", height: "100%" }}>
+                <div className="card-img mx-2 my-2">
+                    <img style={{borderRadius:"0.5rem" }} src={img} className="card-img-top" alt={name} />
+                </div>
                 <div className="card-body">
-                    <h5 className="card-title">{name}</h5>
-                    <p className="card-text">{description}</p>
-                    <div className="d-flex align-items-center">
+                    <div className='title-price'>
+                        <div className='title mx-2'>
+                            <h4 style={{ textAlign: "left"}}>{name}</h4>
+                            <p style={{ textAlign: "left"}}>{description}</p>
+                        </div>
+                        <div className='price'>
+                            ₹{price}
+                        </div>
+                    </div>
+                    <div className='my-2' style={{ width: "18rem", border:"0.5px solid black", borderRadius:"2px"}}></div>
+                    <div className="d-flex align-items-center justify-content-center">
                         {orderQuantity ? (
                             <>
                                 <button
-                                    className="btn btn-primary"
+                                    className="btn bg-transparent"
                                     onClick={() => handleOrder(-1)}
                                 >
-                                    -
+                                    <h4><strong>-</strong></h4>
                                 </button>
-                                <span className="mx-2">{orderQuantity}</span>
                                 <button
-                                    className="btn btn-primary"
+                                    className="btn bg-transparent"
+                                    onClick={() => handleOrder(-1)}
+                                >
+                                    <h5>{orderQuantity}</h5>
+                                </button>
+                                <button
+                                    className="btn bg-transparent"
                                     onClick={() => handleOrder(1)}
                                 >
-                                    +
+                                    <h4><strong>+</strong></h4>
                                 </button>
                             </>
                         ) : (
-                            <button className="btn btn-primary" onClick={() => handleOrder(1)}>
-                                Order: {price}
+                            <button className="btn bg-transparent" onClick={() => handleOrder(1)}>
+                                <h5><strong>ADD</strong></h5>
                             </button>
                         )}
                     </div>
