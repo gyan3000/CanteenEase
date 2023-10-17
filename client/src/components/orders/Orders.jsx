@@ -3,15 +3,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchOrderData } from '../redux/requests/getOrderData';
 import './Orders.css'
 import logo from './../../images/logo.png';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom'
 
 const Orders = () => {
+    const navigate = useNavigate();
     const orderDetails = useSelector((state) => state.getOrder)
     const orders = orderDetails.order.allOrders;
     const user = useSelector((state) => state.getUser);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        fetchOrderData(dispatch, user);
+        if(!user.user.authtoken){
+            toast.warning("Login first");
+            navigate("/login")
+        }else{
+            fetchOrderData(dispatch, user);
+        }
     }, [])
     return (
         <div className='box-parent'>

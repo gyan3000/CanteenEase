@@ -23,6 +23,8 @@ app.use("/api/order", require("./routes/order"));
 app.use("/api", require("./routes/paymentRoute"));
 
 app.use("/api", require("./routes/razorpayRoutes"));
+app.use("/api/store", require("./routes/store"));
+
 
 app.listen(port, () => {
   console.log(`CanteenConnect is listening on port ${port}`)

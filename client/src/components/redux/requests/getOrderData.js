@@ -8,7 +8,6 @@ export async function fetchOrderData(dispatch, user) {
             headers: { "Content-Type": "application/json; charset=UTF-8","auth-token": user.user.authtoken },
         });
         const data = response.data;
-        console.log(response);
         if(response.status === 200){
             dispatch(getOrder(data));
         }else{

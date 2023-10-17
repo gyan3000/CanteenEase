@@ -1,6 +1,8 @@
 const crypto = require("crypto");
 
 const Razorpay = require("razorpay");
+const User = require("../models/User");
+const Menu = require("../models/Menu");
 
 
 const instance = new Razorpay({
@@ -10,17 +12,27 @@ const instance = new Razorpay({
 
 checkout = async (req, res) => {
   try {
-    let amount= 100;
-    const email = "sakushwaha697@gmail.com";
+    const items = req.body.items;
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    const itemIds = items?.map(item => item.id);
+    const menuItems = await Menu.find({ _id: { $in: itemIds } });
+    const totalAmount = items?.reduce((acc, item) => {
+      const menuItem = menuItems?.find(menuItem => menuItem._id.toString() === item.id.toString());
+      return acc + menuItem?.price * item.quantity;
+    }, 0);
+
     const options = {
-        amount: Number(amount * 100),
-        currency: "INR",
-      };
-      const order = await instance.orders.create(options);
-      res.status(200).json({
-        success: true,
-        order,
-      });
+      amount: Number(totalAmount * 100),
+      currency: "INR",
+    };
+    const order = await instance.orders.create(options);
+    res.status(200).json({
+      success: true,
+      order,
+    });
 
   } catch (error) {
     res.status(500).send(error.message);
@@ -51,11 +63,12 @@ paymentVerification = async (req, res) => {
         razorpay_payment_id: razorpay_payment_id,
         signature: razorpay_signature
       };
-      const response = db.collection("payments").doc(razorpay_order_id).set(paymentJson);
-
-      res.redirect(
-        `http://localhost:3000/paymentsuccess?reference=${razorpay_payment_id}`
-      );
+      const response = await instance.payments.fetch(razorpay_payment_id);
+      // console.log(response);
+      // res.redirect(
+      //   `http://localhost:3000/paymentsuccess?reference=${razorpay_payment_id}`
+      // );
+      res.json("Success");
     } else {
       res.status(400).json({
         success: false,
@@ -68,6 +81,6 @@ paymentVerification = async (req, res) => {
 
 
 module.exports = {
-    checkout,
-    paymentVerification
-  };
+  checkout,
+  paymentVerification
+};
