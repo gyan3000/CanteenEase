@@ -1,30 +1,126 @@
-.card {
-    justify-content: space-evenly;
-    flex-shrink: 0;
+.box-menu {
+    margin: 1rem;
+    height: 415px;
+    width: 308px;
 }
 
-.card-img {
-    padding-right: 0.15rem;
-    width: 19rem;
-    filter: drop-shadow(rgb(205, 209, 205) 3px 3px 3px);
+.box-menu .card {
+    background: none;
+    height: 415px;
+    left: 0;
+    position: relative;
+    top: 0;
+    transition: all 0.2s ease;
+    width: 318px;
 }
 
-
-.title {
-    display: flex;
-    flex-direction: column;
+.box-menu .overlap-group {
+    height: 415px;
+    position: relative;
+    width: 308px;
 }
 
-.price {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 1000;
-    font-size: xx-large;
+.box-menu .div {
+    background-color: #ffffff;
+    border-radius: 20px;
+    height: 415px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 308px;
 }
 
-.title-price {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
+.box-menu .item-price {
+    color: #000000;
+    font-family: "Inter-ExtraBold", Helvetica;
+    font-size: 28px;
+    font-weight: 600;
+    left: 216px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 286px;
 }
 
-@media (max-width: 900px) {}
+.box-menu .item-name {
+    color: #000000;
+    font-family: "Montserrat-SemiBold", Helvetica;
+    font-size: 28px;
+    font-weight: 600;
+    left: 21px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 286px;
+}
+
+.box-menu .order-desc {
+    color: #000000;
+    font-family: "Inter-Regular", Helvetica;
+    font-size: 15px;
+    font-weight: 400;
+    left: 21px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 324px;
+    white-space: nowrap;
+}
+
+.box-menu .delivery-status {
+    color: #000000;
+    font-family: "Montserrat-Regular", Helvetica;
+    font-size: 24.1px;
+    font-weight: 400;
+    left: 147px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 425px;
+}
+
+.box-menu .line {
+    border: 1px solid gray;
+    border-radius: 2px;
+    left: 11px;
+    position: absolute;
+    top: 360px;
+    width: 285px;
+}
+
+.box-menu .logo-without-back {
+    height: 49px;
+    left: 13px;
+    object-fit: cover;
+    position: absolute;
+    top: 4px;
+    width: 49px;
+}
+
+.box-menu .frame {
+    /* background-image: url(./frame-1.png); */
+    background-position: 50% 50%;
+    background-size: cover;
+    border-radius: 8px;
+    height: 223px;
+    left: 15px;
+    overflow: hidden;
+    position: absolute;
+    top: 49px;
+    width: 278px;
+}
+
+.box-menu .image {
+    height: 223px;
+    left: 0;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    width: 278px;
+}
+
+.box-menu .add-button {
+    position: absolute;
+    top: 365px;
+    left: 110px;
+}

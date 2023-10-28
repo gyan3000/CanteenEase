@@ -3,16 +3,14 @@
 }
 
 .menu-parent {
-    margin-top: 3rem;
-    height: calc(100vh - 14rem);
+    margin: 1rem;
+    height: calc(100vh - 5rem);
     overflow: auto;
 }
 
 .menu-container {
     display: flex;
-    /* width: 80%; */
     margin: auto;
     flex-wrap: wrap;
-    margin-top: 5rem;
     justify-content: center;
 }

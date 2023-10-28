@@ -1,6 +1,6 @@
 .box-parent {
-    margin-top: 3rem;
-    height: calc(100vh - 14rem);
+    margin-top: 1rem;
+    height: calc(100vh - 8rem);
     overflow: auto;
 }
 
@@ -9,6 +9,7 @@
     overflow: scroll;
     flex-wrap: wrap;
     justify-content: center;
+
 }
 
 .box {

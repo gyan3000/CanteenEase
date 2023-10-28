@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import "./MenuCard.css";
 import Card from 'react-bootstrap/Card';
+import logo from "./../../images/logo.png"
 
 const MenuCard = ({ id, name, description, vegetarian, price, img }) => {
     const [orderQuantity, setOrderQuantity] = useState(0);
@@ -55,7 +56,7 @@ const MenuCard = ({ id, name, description, vegetarian, price, img }) => {
 
     return (
         <>
-            <div className="card mx-2 my-3" style={{ width: "20rem", height: "100%" }}>
+            {/* <div className="card mx-2 my-3" style={{ width: "20rem", height: "100%" }}>
                 <div className="card-img mx-2 my-2">
                     <img style={{borderRadius:"0.5rem" }} src={img} className="card-img-top" alt={name} />
                 </div>
@@ -99,7 +100,51 @@ const MenuCard = ({ id, name, description, vegetarian, price, img }) => {
                         )}
                     </div>
                 </div>
-            </div>
+            </div> */}
+            <div className="box-menu">
+                <div className="card">
+                    <div className="overlap-group">
+                    <div className="div" />
+                    <div className="item-price">₹{price}</div>
+                    <div className="item-name">{name}</div>
+                    <p className="order-desc">{description}</p>
+                    <div className='line'></div>
+                    <img className="logo-without-back" alt="Logo without back" src={logo} />
+                    <div className="frame">
+                        <img className="image" alt={name} src={img}/>
+                    </div>
+                    <div className="add-button">
+                        {orderQuantity ? (
+                            <>
+                                <button
+                                    className="btn bg-transparent"
+                                    onClick={() => handleOrder(-1)}
+                                >
+                                    <h4><strong style={{color: "red"}}>-</strong></h4>
+                                </button>
+                                <button
+                                    className="btn bg-transparent"
+                                    onClick={() => handleOrder(-1)}
+                                >
+                                    <h5>{orderQuantity}</h5>
+                                </button>
+                                <button
+                                    className="btn bg-transparent"
+                                    onClick={() => handleOrder(1)}
+                                >
+                                    <h4><strong style={{color: "red"}}>+</strong></h4>
+                                </button>
+                            </>
+                        ) : (
+                            <button className="btn bg-transparent" onClick={() => handleOrder(1)}>
+                                <h5><strong style={{color: "red"}}>ADD</strong></h5>
+                            </button>
+                        )}
+                    </div>
+                    </div>
+                </div>
+              </div>
+
         </>
     );
 };

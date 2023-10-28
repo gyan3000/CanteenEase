@@ -1,7 +1,7 @@
 .cart-page {
     display: flex;
     justify-content: space-evenly;
-    margin: 3rem 0;
+    margin: 5rem 0;
     height: calc(100vh - 17rem);
     overflow: auto;
 }
@@ -41,7 +41,6 @@
     border: 2px solid black;
     background-color: white;
     border-radius: 0.5rem;
-    margin-top: 3rem;
 }
 
 .payment h5 {

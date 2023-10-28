@@ -9,9 +9,9 @@ const Navbar = () => {
 
   return (
     <div>
-      <nav className="navbar navbar-expand-lg " style={{" background": "transparent"}}>
-        <div className="container-fluid">
-          <Link className="navbar-brand" to="/">
+      <nav className="navbar-own" style={{" background": "transparent"}}>
+        <div className="nav-container">
+          <Link className="navbar-logo" to="/">
             <img src={logo} alt="" />
           </Link>
           <div className="items">
@@ -36,17 +36,6 @@ const Navbar = () => {
                   Track Order
                 </Link>
               </li>
-              {/* <li className="nav-item">
-              {!user.authtoken ? (
-                <a className="btn btn-primary mx-2" href="/login" role="button">
-                  Login
-                </a>
-              ) : (
-                <a className="btn btn-primary mx-2" href="/profile" role="button">
-                  Profile
-                </a>
-              )}   
-              </li>               */}
             </ul>                     
           </div>
         </div>
