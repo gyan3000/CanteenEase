@@ -14,6 +14,7 @@ const Orders = () => {
     const orderDetails = useSelector((state) => state.getOrder)
     const orders = orderDetails.order;
     const user = useSelector((state) => state.getUser);
+    console.log(orderDetails);
     const dispatch = useDispatch();
     const options = {
         // year: 'numeric',

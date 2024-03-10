@@ -9,6 +9,7 @@ export async function fetchOrderData(dispatch, user) {
         });
         const data = response.data;
         if(response.status === 200){
+            // console.log(data);
             dispatch(getOrder(data));
         }else{
             toast.error("Please Login first");

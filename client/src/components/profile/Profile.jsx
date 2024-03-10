@@ -9,7 +9,7 @@ import getOrder from "./../redux/actions/orderAction"
 const Profile = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const user = useSelector((state) => state.getUser).user;
+    const user = useSelector((state) => state.getUser).user.userDetails;
     if (!user.authtoken) {
         navigate("/login");
     }
