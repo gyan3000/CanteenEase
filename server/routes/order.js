@@ -4,6 +4,7 @@ const fetchuser = require("./../middleware/fetchuser");
 const fetchadmin = require("./../middleware/fetchadmin");
 
 const Order = require('./../models/Order');
+const DeliveredOrder = require("./../models/DeliveredOrders");
 const Menu = require("./../models/Menu");
 const Counter = require('./../models/Counter');
 const Razorpay = require("razorpay");
@@ -62,7 +63,8 @@ router.post('/place-order', fetchuser, async (req, res) => {
                 user: req.user.id,
                 items,
                 totalAmount,
-                orderNumber
+                orderNumber,
+                razorpayPaymentId: razorpay_payment_id
             });
             const savedOrder = await newOrder.save();
             user.orderHistory.push({
@@ -74,7 +76,8 @@ router.post('/place-order', fetchuser, async (req, res) => {
                     price: item.price,
                 })),
                 totalAmount,
-                orderNumber: orderNumber
+                orderNumber: orderNumber,
+                paymentId: razorpay_payment_id
             });
             await user.save();
             res.status(201).json({ orderNumber });
@@ -132,12 +135,9 @@ router.get('/pending-orders', fetchadmin, async (req, res) => {
 
 router.get('/your-orders', fetchuser, async (req, res) => {
     try {
-        const orders = await Order.find({ user: req.user.id }).sort({ orderNumber: 1 });
+        const orders = await Order.find({ user: req.user.id, status:'Pending' }).sort({ orderNumber: 1 });
         const allOrders = [];
-        var user
         for (const order of orders) {
-            user = await User.findById(order.user);
-            if (user) {
                 const itemsWithNames = [];
                 for (const item of order.items) {
                     const menuItem = await Menu.findById(item.id);
@@ -156,32 +156,26 @@ router.get('/your-orders', fetchuser, async (req, res) => {
                     status: order.status,
                     timestamp: order.timestamp
                 });
-            }
         }
-        res.json({ userName: user.name, allOrders });
+        res.json(allOrders);
     } catch (error) {
         console.error('Error getting orders:', error);
         res.status(500).json({ error: 'An error occurred while getting orders' });
     }
 });
 
-router.get('/order-numbers', fetchuser, async (req, res) => {
+router.get('/order-numbers', async (req, res) => {
     try {
-        const user = await User.findById(req.user.id);
-
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
-        const pendingOrders = await Order.find({ user: req.user.id, status: 'Pending' }).sort({ timestamp: 1 });
-        const deliveredOrders = await Order.find({ user: req.user.id, status: 'Delivered' }).sort({ timestamp: -1 });
-
+        const pendingOrders = await Order.find().sort({ timestamp: 1 });
         const pendingOrderNumbers = pendingOrders.map(order => order.orderNumber);
-        const latestDeliveredOrderNumber = deliveredOrders.length > 0 ? deliveredOrders[0].orderNumber : null;
-
+        var orderOnTable;
+        if(pendingOrderNumbers.length>0){
+            orderOnTable= pendingOrderNumbers[0]; 
+        }else{
+            orderOnTable= 0
+        }
         res.json({
-            pendingOrderNumbers,
-            latestDeliveredOrderNumber
+            orderOnTable
         });
     } catch (error) {
         console.error('Error getting order numbers:', error);
@@ -200,7 +194,10 @@ router.get('/mark-delivered/:orderId', fetchadmin, async (req, res) => {
             { _id: orderId },
             { $set: { status: 'Delivered' } }
         );
+        const deliveredOrder = new DeliveredOrder(order.toObject());
+        await deliveredOrder.save();
 
+        await Order.findByIdAndDelete(orderId);
         return res.json({ message: 'Order marked as delivered' });
     } catch (error) {
         console.error('Error marking order as delivered:', error);

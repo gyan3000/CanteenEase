@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 
 export default function Home() {
     const [isAvailable, setAvailable] = useState(true);
-    const [isLoading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -16,9 +15,7 @@ export default function Home() {
                 setAvailable(response.data.isOpen);
             } catch (error) {
                 console.error("Error fetching data:", error);
-            } finally {
-                setLoading(false);
-            }
+            } 
         };
         fetchData();
     }, []);
@@ -26,51 +23,49 @@ export default function Home() {
     const user = useSelector((state) => state.getUser).user;
 
     return (
-        <>
-            {isLoading ? <Loader /> : <div className='home'>
-                {isAvailable ? (
-                    <div className="text">
-                        <h1>Accepting</h1>
-                        <p>Orders</p>
+        <div className='home'>
+            {isAvailable ? (
+                <div className="text">
+                    <h1>Accepting</h1>
+                    <p>Orders</p>
+                </div>
+            ) : (
+                <div className="text-inactive">
+                    <h1>Temporarily</h1>
+                    <p>Unavailable</p>
+                </div>
+            )
+            }
+            {isAvailable ? (
+                [!user.authtoken ? (
+                    <div className="button">
+                        <Link to="/login" role="button">
+                            Log In
+                        </Link>
                     </div>
                 ) : (
-                    <div className="text-inactive">
-                        <h1>Temporarily</h1>
-                        <p>Unavailable</p>
+                    <div className="button">
+                        <Link to="/profile" role="button">
+                            Profile
+                        </Link>
                     </div>
-                )
-                }
-                {isAvailable ? (
-                    [!user.authtoken ? (
-                        <div className="button">
-                            <Link to="/login" role="button">
-                                Log In
-                            </Link>
-                        </div>
-                    ) : (
-                        <div className="button">
-                            <Link to="/profile" role="button">
-                                Profile
-                            </Link>
-                        </div>
-                    )]
+                )]
 
+            ) : (
+                [!user.authtoken ? (
+                    <div className="button-inactive">
+                        <Link to="/login" role="button">
+                            Log In
+                        </Link>
+                    </div>
                 ) : (
-                    [!user.authtoken ? (
-                        <div className="button-inactive">
-                            <Link to="/login" role="button">
-                                Log In
-                            </Link>
-                        </div>
-                    ) : (
-                        <div className="button-inactive">
-                            <Link to="/profile" role="button">
-                                Profile
-                            </Link>
-                        </div>
-                    )]
-                )}
-            </div>}
-        </>
+                    <div className="button-inactive">
+                        <Link to="/profile" role="button">
+                            Profile
+                        </Link>
+                    </div>
+                )]
+            )}
+        </div>
     );
 }

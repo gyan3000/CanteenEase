@@ -38,7 +38,8 @@ const userSchema = new mongoose.Schema({
             itemId: mongoose.Schema.Types.ObjectId,
             quantity: Number
         }],
-        totalAmount: Number
+        totalAmount: Number,
+        paymentId: String
     }],
     favorites: [{
         itemId: mongoose.Schema.Types.ObjectId,

@@ -98,7 +98,9 @@
     position: absolute;
     top: 0;
 }
-
+.orderontable{
+    color: white;
+}
 /* 
 .box .div {
     height: 28px;

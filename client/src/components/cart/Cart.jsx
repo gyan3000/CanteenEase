@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import ButtonLoader from "./../loader/ButtonLoader";
 import './Cart.css';
 import logo from './../../images/logo.png'
 import Table from '@mui/material/Table';
@@ -16,6 +17,7 @@ import Paper from '@mui/material/Paper';
 const Cart = () => {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
+  const [click, setClick] = useState(false);
   const cartKey = 'cart';
   const user = useSelector((state) => state.getUser);
   const isLogin = user.user.authtoken;
@@ -63,15 +65,17 @@ const Cart = () => {
       navigate("/login");
     }
     else {
+      setClick(true);
       const storedCartItems = JSON.parse(localStorage.getItem(cartKey)) || [];
       var body = {
         items: storedCartItems,
       };
       if (!storedCartItems.length) {
         toast.error('Add some items to the cart');
+        navigate("/menu");
       } else {
         try {
-          const { data: { order } } = await axios.post("http://localhost:5000/api/checkout",
+          const checkoutResponse = await axios.post("http://localhost:5000/api/checkout",
             body,
             {
               headers: {
@@ -79,71 +83,80 @@ const Cart = () => {
                 'auth-token': user.user.authtoken,
               },
             })
-          const options = {
-            key,
-            amount: order.amount,
-            currency: "INR",
-            name: "Order",
-            description: "Payment To main Cafeteria",
-            // image: imageUrl,
-            order_id: order.id,
-            handler: async function (response) {
-              // alert(response);
-              // alert(response.razorpay_payment_id);
-              // alert(response.razorpay_order_id);
-              // alert(response.razorpay_signature);
-              body = {
-                ...body,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_signature: response.razorpay_signature
-              }
-              const response2 = await axios.post(
-                'http://localhost:5000/api/order/place-order',
-                body,
-                {
-                  headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                    'auth-token': user.user.authtoken,
-                  },
+            const order = checkoutResponse.data.order;
+          if (checkoutResponse.status === 200) {
+            const options = {
+              key,
+              amount: order.amount,
+              currency: "INR",
+              name: "Order",
+              description: "Payment To main Cafeteria",
+              // image: imageUrl,
+              order_id: order.id,
+              handler: async function (response) {
+                // alert(response);
+                // alert(response.razorpay_payment_id);
+                // alert(response.razorpay_order_id);
+                // alert(response.razorpay_signature);
+                body = {
+                  ...body,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_signature: response.razorpay_signature
                 }
-              );
-              if (response2.status === 201) {
-                toast.success(
-                  'Order Successful with order No.: ' +
-                  response2.data.orderNumber
-                );
-                navigate('/menu');
-                localStorage.setItem(cartKey, JSON.stringify([]));
-                setCartItems([]);
-              } else {
-                toast.error('Error while ordering. Try Again!');
+
+                const response2 = await axios.post(
+                  'http://localhost:5000/api/order/place-order',
+                  body,
+                  {
+                    headers: {
+                      'Content-Type': 'application/json; charset=UTF-8',
+                      'auth-token': user.user.authtoken,
+                    },
+                  })
+                if (response2.status === 201) {
+                  toast.success(
+                    'Order Successful with order No.: ' +
+                    response2.data.orderNumber
+                  );
+                  navigate('/menu');
+                  localStorage.setItem(cartKey, JSON.stringify([]));
+                  setCartItems([]);
+                } else {
+                  toast.error('Error while ordering. Try Again!');
+                }
+              },
+              // callback_url: "http://localhost:5000/api/paymentverification",
+              prefill: {
+                name: user.user.userDetails.name,
+                email: user.user.userDetails.email,
+                contact: JSON.stringify(user.user.userDetails.phone)
+              },
+              notes: {
+                "address": "Razorpay Corporate Office"
+              },
+              theme: {
+                "color": "#121212"
               }
-            },
-            // callback_url: "http://localhost:5000/api/paymentverification",
-            prefill: {
-              name: user.user.name,
-              email: user.user.email,
-              contact: JSON.stringify(user.user.phone)
-            },
-            notes: {
-              "address": "Razorpay Corporate Office"
-            },
-            theme: {
-              "color": "#121212"
-            }
-          };
-          const razor = new window.Razorpay(options);
-          razor.on('payment.failed', function (response) {
-            alert(response.error.code);
-            alert(response.error.description);
-            alert(response.error.source);
-            alert(response.error.step);
-            alert(response.error.reason);
-            alert(response.error.metadata.order_id);
-            alert(response.error.metadata.payment_id);
-          });
-          razor.open();
+            };
+            const razor = new window.Razorpay(options);
+            razor.on('payment.failed', function (response) {
+              alert(response.error.code);
+              alert(response.error.description);
+              alert(response.error.source);
+              alert(response.error.step);
+              alert(response.error.reason);
+              alert(response.error.metadata.order_id);
+              alert(response.error.metadata.payment_id);
+            });
+            razor.open();
+          } else if (checkoutResponse.status === 201) {
+            toast.error("Some Items are not available Kindly empty the cart and refresh the page");
+          }
+          else {
+            toast.error("Login Again please");
+          }
+          setClick(false);
         } catch (error) {
           console.log('Error In Placing Your Order', error);
         }
@@ -211,7 +224,9 @@ const Cart = () => {
             </Table>
           </TableContainer>
         </div>
-        <button className='checkout-button' onClick={placeOrder}>{isLogin ? 'CHECKOUT' : 'LOGIN'}</button>
+        <button className='checkout-button' onClick={placeOrder}>
+          {isLogin ? (click ? <ButtonLoader /> : 'CHECKOUT') : 'LOGIN'}
+        </button>
         {/* <div className="text-right">
           <h4>Subtotal: ₹{calculateTotal().toFixed(2)}</h4>
         </div>

@@ -19,11 +19,17 @@ checkout = async (req, res) => {
     }
     const itemIds = items?.map(item => item.id);
     const menuItems = await Menu.find({ _id: { $in: itemIds } });
+    const unavailableItems = [];
     const totalAmount = items?.reduce((acc, item) => {
       const menuItem = menuItems?.find(menuItem => menuItem._id.toString() === item.id.toString());
+      if (!menuItem.availability) {
+        unavailableItems.push(menuItem.name);
+      }
       return acc + menuItem?.price * item.quantity;
     }, 0);
-
+    if (unavailableItems.length > 0) {
+      return res.status(201).json({ unavailable: unavailableItems });
+    }
     const options = {
       amount: Number(totalAmount * 100),
       currency: "INR",

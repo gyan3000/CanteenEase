@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const orderSchema = new mongoose.Schema({
+const DeliveredOrderSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -23,18 +23,18 @@ const orderSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
+        enum: ['Pending', 'Processing', 'Delivered', 'Cancelled'],
         default: 'Pending'
     },
     payment: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Payment'
     },
-    razorpayPaymentId: {
-        type: String,
+    timestamp: {
+        type: Date,
         required: true
     },
-    timestamp: {
+    deliveredTimestamp:{
         type: Date,
         default: Date.now
     },
@@ -44,5 +44,5 @@ const orderSchema = new mongoose.Schema({
     }
 });
 
-const Order = mongoose.model('Order', orderSchema);
+const Order = mongoose.model('DeliveredOrder', DeliveredOrderSchema);
 module.exports = Order;
