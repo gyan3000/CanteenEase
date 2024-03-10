@@ -128,9 +128,9 @@ const Cart = () => {
               },
               // callback_url: "http://localhost:5000/api/paymentverification",
               prefill: {
-                name: user.user.userDetails.name,
-                email: user.user.userDetails.email,
-                contact: JSON.stringify(user.user.userDetails.phone)
+                name: user.user.name,
+                email: user.user.email,
+                contact: JSON.stringify(user.user.phone)
               },
               notes: {
                 "address": "Razorpay Corporate Office"
