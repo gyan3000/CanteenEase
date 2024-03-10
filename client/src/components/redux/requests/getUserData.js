@@ -11,9 +11,8 @@ export async function fetchUserDataSignup(dispatch, body) {
         });
         const data = response.data;
         if(data.success){
-            dispatch(getUser({...body,...data}));
-            window.location = "/menu";
-            toast.success("SignUp Successful");
+            window.location = "/login";
+            toast.success("SignUp Successful, Now Login");
         }else{
             toast.error("Error in Creating account");
         }

@@ -12,7 +12,7 @@ const Orders = () => {
     const [orderOnTable, setOrderOnTable] = useState(0);
     const navigate = useNavigate();
     const orderDetails = useSelector((state) => state.getOrder)
-    const orders = orderDetails.order;
+    const orders = orderDetails.order.allOrders;
     const user = useSelector((state) => state.getUser);
     console.log(orderDetails);
     const dispatch = useDispatch();
@@ -27,7 +27,7 @@ const Orders = () => {
         const OrderOnTable = await axios.get("http://localhost:5000/api/order/order-numbers");
         setOrderOnTable(OrderOnTable.data.orderOnTable);
     }
-    setTimeout(OrderOnTable, 10000);
+    // setTimeout(OrderOnTable, 10000);
     useEffect(() => {
         if (!user.user.authtoken) {
             toast.warning("Login first");
@@ -42,7 +42,7 @@ const Orders = () => {
             <div className='box-parent'>
                 <h2 className='orderontable'>Order On Table: {orderOnTable}</h2>
                 <div className='box-container'>
-                    {orders?.map((ord, index) => (
+                {orders && orders.length>0? <>{orders?.map((ord, index) => (
                         <div className="box">
                             <div className="card">
                                 <div className="overlap-group">
@@ -70,7 +70,7 @@ const Orders = () => {
                                 </div>
                             </div>
                         </div>
-                    ))}
+                    ))}</> : <><h3 className='orderontable'>No Orders</h3></>}
                 </div>
 
                 {/* <div className='box-container'>

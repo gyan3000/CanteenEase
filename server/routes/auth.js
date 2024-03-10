@@ -37,13 +37,11 @@ body('password', "Password must be atleast 5 length").isLength({ min: 5 })],
             }
             const salt = await bcrypt.genSalt(10);
             const secPass = await bcrypt.hash(req.body.password, salt);
-            const otp = Math.floor(Math.random() * 1000000);
             user = await User.create({
                 name: req.body.name,
                 password: secPass,
                 email: req.body.email,
-                phone: req.body.phone,
-                otp: otp
+                phone: req.body.phone
             });
             const data = {
                 user: {
@@ -52,20 +50,20 @@ body('password', "Password must be atleast 5 length").isLength({ min: 5 })],
             }
             const authToken = jwt.sign(data, JWT_SECRET);
             success = true;
-            const mailOptions = {
-                from: process.env.GMAIL,
-                to: req.body.email,
-                subject: 'Email Verification OTP',
-                text: `Your OTP: ${otp}`,
-            };
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    console.log(error);
-                    res.status(500).send('Error sending OTP.');
-                } else {
-                    res.send('OTP sent successfully.');
-                }
-            });
+            // const mailOptions = {
+            //     from: process.env.GMAIL,
+            //     to: req.body.email,
+            //     subject: 'Email Verification OTP',
+            //     text: `Your OTP: ${otp}`,
+            // };
+            // transporter.sendMail(mailOptions, (error, info) => {
+            //     if (error) {
+            //         console.log(error);
+            //         res.status(500).send('Error sending OTP.');
+            //     } else {
+            //         res.send('OTP sent successfully.');
+            //     }
+            // });
             res.json({ "success": success, "authtoken": authToken });
         } catch (error) {
             console.error(error.message);

@@ -157,7 +157,7 @@ router.get('/your-orders', fetchuser, async (req, res) => {
                     timestamp: order.timestamp
                 });
         }
-        res.json(allOrders);
+        res.json({"allOrders": allOrders});
     } catch (error) {
         console.error('Error getting orders:', error);
         res.status(500).json({ error: 'An error occurred while getting orders' });
