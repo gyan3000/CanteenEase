@@ -58,7 +58,7 @@ export default function SignIn() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="xs" style={{"background": "white" , "borderRadius": "10px"}}>
         <CssBaseline />
         <Box
           sx={{
